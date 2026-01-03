@@ -131,6 +131,46 @@
             -webkit-user-select: none;
             -webkit-touch-callout: none;
         }
+
+        /* 修復手機拖拽時產生的縮圖視覺錯誤（黑色區塊與變形） */
+        .dnd-poly-drag-image {
+            opacity: 0.9 !important;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3) !important;
+            /* 行動裝置無法正確快照毛玻璃效果，強制改為純白背景防止黑色塊 */
+            background: #ffffff !important;
+            border-radius: 24px !important;
+            /* 移除可能導致渲染失敗的濾鏡 */
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            /* 保持正確比例，微調縮放 */
+            transform: scale(0.95) !important;
+            border: 1px solid rgba(0,0,0,0.05) !important;
+        }
+        
+        /* 確保縮圖內部的文字在純白背景下清晰 */
+        .dnd-poly-drag-image * {
+            mix-blend-mode: normal !important;
+            text-shadow: none !important;
+        }
+
+        /* 絲滑擠壓動畫核心樣式 */
+        .dnd-item-container {
+            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.2s ease;
+            will-change: transform;
+        }
+        
+        .dnd-item-dragging {
+            opacity: 0.2 !important;
+            transform: scale(0.9) !important;
+        }
+
+        .dnd-item-pushed-up {
+            transform: translateY(-10px) scale(0.98);
+        }
+
+        .dnd-item-pushed-down {
+            transform: translateY(10px) scale(0.98);
+        }
     </style>
 
 <link rel="stylesheet" href="/index.css">
@@ -148,7 +188,7 @@
   }
 }
 </script>
-  <script type="module" crossorigin src="./assets/index-BcRiFcII.js"></script>
+  <script type="module" crossorigin src="./assets/index-DEv6vedS.js"></script>
 </head>
 <body>
     <div id="root"></div>
