@@ -132,26 +132,46 @@
             -webkit-touch-callout: none;
         }
 
-        /* 修復手機拖拽時產生的縮圖視覺錯誤（黑色區塊與變形） */
+        /* --- 修正手機拖拽縮圖黑色區塊與壓縮問題 --- */
         .dnd-poly-drag-image {
-            opacity: 0.9 !important;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3) !important;
-            /* 行動裝置無法正確快照毛玻璃效果，強制改為純白背景防止黑色塊 */
-            background: #ffffff !important;
+            opacity: 0.95 !important;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2) !important;
             border-radius: 24px !important;
-            /* 移除可能導致渲染失敗的濾鏡 */
+            /* 關鍵：強制寬度防止壓縮 */
+            width: calc(100vw - 48px) !important;
+            max-width: 400px !important;
+            height: auto !important;
+            /* 移除可能導致黑色塊的濾鏡 */
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
-            /* 保持正確比例，微調縮放 */
-            transform: scale(0.95) !important;
-            border: 1px solid rgba(0,0,0,0.05) !important;
+            transform: scale(0.98) !important;
+            background: #ffffff !important;
+            border: 1px solid rgba(0,0,0,0.1) !important;
+            pointer-events: none !important;
         }
         
-        /* 確保縮圖內部的文字在純白背景下清晰 */
-        .dnd-poly-drag-image * {
-            mix-blend-mode: normal !important;
-            text-shadow: none !important;
+        /* 遞歸移除縮圖內所有子元素的透明效果與濾鏡 */
+        .dnd-poly-drag-image *,
+        .dnd-poly-drag-image *::before,
+        .dnd-poly-drag-image *::after {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            background-color: transparent !important;
+            box-shadow: none !important;
+            animation: none !important;
+            transition: none !important;
         }
+
+        /* 針對特定卡片類型的縮圖補償背景 */
+        .dnd-poly-drag-image .liquid-glass {
+            background-color: #ffffff !important;
+            color: #1e293b !important;
+        }
+        .dnd-poly-drag-image .flight-card {
+            background: #3b82f6 !important;
+            color: #ffffff !important;
+        }
+        /* -------------------------------------- */
 
         /* 絲滑擠壓動畫核心樣式 */
         .dnd-item-container {
@@ -188,7 +208,7 @@
   }
 }
 </script>
-  <script type="module" crossorigin src="./assets/index-DEv6vedS.js"></script>
+  <script type="module" crossorigin src="./assets/index-C12wtQ0O.js"></script>
 </head>
 <body>
     <div id="root"></div>
