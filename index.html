@@ -132,64 +132,75 @@
             -webkit-touch-callout: none;
         }
 
-        /* --- 修正手機拖拽縮圖黑色區塊與壓縮問題 --- */
+        /* --- 核心修正：手機拖拽縮圖黑色區塊與壓縮問題 --- */
         .dnd-poly-drag-image {
-            opacity: 0.95 !important;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2) !important;
-            border-radius: 24px !important;
-            /* 關鍵：強制寬度防止壓縮 */
-            width: calc(100vw - 48px) !important;
-            max-width: 400px !important;
+            opacity: 1 !important;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3) !important;
+            border-radius: 28px !important;
+            /* 1. 強制寬度，防止卡片縮小變形 */
+            width: 320px !important;
             height: auto !important;
-            /* 移除可能導致黑色塊的濾鏡 */
+            /* 2. 徹底移除濾鏡與毛玻璃，改用實體背景色消除黑色塊 */
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
-            transform: scale(0.98) !important;
-            background: #ffffff !important;
-            border: 1px solid rgba(0,0,0,0.1) !important;
-            pointer-events: none !important;
+            background-color: #ffffff !important;
+            border: 2px solid rgba(0,0,0,0.05) !important;
+            padding: 4px !important;
+            transform: scale(1.02) !important;
+            overflow: hidden !important;
         }
         
-        /* 遞歸移除縮圖內所有子元素的透明效果與濾鏡 */
+        /* 3. 遞歸禁用縮圖內所有子元素的濾鏡與透明渲染 */
         .dnd-poly-drag-image *,
         .dnd-poly-drag-image *::before,
         .dnd-poly-drag-image *::after {
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
-            background-color: transparent !important;
+            filter: none !important;
             box-shadow: none !important;
             animation: none !important;
             transition: none !important;
         }
 
-        /* 針對特定卡片類型的縮圖補償背景 */
+        /* 4. 針對一般卡片的縮圖樣式 */
         .dnd-poly-drag-image .liquid-glass {
-            background-color: #ffffff !important;
-            color: #1e293b !important;
+            background: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
+            backdrop-filter: none !important;
+            box-shadow: none !important;
         }
+        
+        /* 5. 針對航班卡片的縮圖樣式 */
         .dnd-poly-drag-image .flight-card {
-            background: #3b82f6 !important;
+            background: #3b82f6 !important; /* 使用實體藍色取代漸層 */
             color: #ffffff !important;
+            border-radius: 24px !important;
+        }
+        
+        /* 確保文字在實體背景下清晰可見 */
+        .dnd-poly-drag-image .text-slate-800,
+        .dnd-poly-drag-image .text-slate-700 {
+            color: #1e293b !important;
         }
         /* -------------------------------------- */
 
-        /* 絲滑擠壓動畫核心樣式 */
+        /* 絲滑擠壓動畫樣式 */
         .dnd-item-container {
             transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.2s ease;
             will-change: transform;
         }
         
         .dnd-item-dragging {
-            opacity: 0.2 !important;
-            transform: scale(0.9) !important;
+            opacity: 0.1 !important;
+            transform: scale(0.95) !important;
         }
 
         .dnd-item-pushed-up {
-            transform: translateY(-10px) scale(0.98);
+            transform: translateY(-8px) scale(0.99);
         }
 
         .dnd-item-pushed-down {
-            transform: translateY(10px) scale(0.98);
+            transform: translateY(8px) scale(0.99);
         }
     </style>
 
@@ -208,7 +219,7 @@
   }
 }
 </script>
-  <script type="module" crossorigin src="./assets/index-C12wtQ0O.js"></script>
+  <script type="module" crossorigin src="./assets/index-NgJaLvcT.js"></script>
 </head>
 <body>
     <div id="root"></div>
