@@ -1,13 +1,23 @@
+
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- 加入 viewport-fit=cover 以確保在 iPhone 瀏海屏上全螢幕顯示 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>My Trip</title>
     
-    <!-- App Icon / Favicon (SVG Data URI) -->
+    <!-- iOS Web App Meta Tags (讓網頁加入主畫面後像原生 App) -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="My Trip">
+
+    <!-- App Icon / Favicon (SVG Data URI) - 用於瀏覽器分頁 -->
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2360A5FA;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%231E40AF;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='128' fill='url(%23grad)'/%3E%3Cpath fill='white' d='M440 24L24 200c-18 7-20 31-4 41l118 69 46 142c5 15 26 18 35 4l44-67 114 86c16 12 40 3 43-17L472 44c3-21-20-38-32-20z'/%3E%3C/svg%3E" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2360A5FA;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%231E40AF;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' fill='url(%23grad)'/%3E%3Cpath fill='white' d='M440 24L24 200c-18 7-20 31-4 41l118 69 46 142c5 15 26 18 35 4l44-67 114 86c16 12 40 3 43-17L472 44c3-21-20-38-32-20z'/%3E%3C/svg%3E">
+    
+    <!-- iOS Home Screen Icon (必須是 PNG 格式，iOS 不支援 SVG) -->
+    <!-- 這裡使用一個外部 CDN 的紙飛機 PNG 圖示作為替代。建議您日後製作一個 192x192 的 icon.png 放在專案根目錄，並將下方 href 改為 "/icon.png" -->
+    <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/512/paper-plane.png">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -34,6 +44,9 @@
             overflow-x: hidden;
             color: #1e293b;
             overscroll-behavior-y: none;
+            /* 確保在 iOS 全螢幕模式下，內容不會被狀態列遮擋 */
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
         }
         
         .app-bg {
