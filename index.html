@@ -16,11 +16,25 @@
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2360A5FA;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%231E40AF;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='128' fill='url(%23grad)'/%3E%3Cpath fill='white' d='M440 24L24 200c-18 7-20 31-4 41l118 69 46 142c5 15 26 18 35 4l44-67 114 86c16 12 40 3 43-17L472 44c3-21-20-38-32-20z'/%3E%3C/svg%3E" type="image/svg+xml">
     
     <!-- iOS Home Screen Icon (必須是 PNG 格式，iOS 不支援 SVG) -->
-    <!-- 這裡使用一個外部 CDN 的紙飛機 PNG 圖示作為替代。建議您日後製作一個 192x192 的 icon.png 放在專案根目錄，並將下方 href 改為 "/icon.png" -->
     <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/512/paper-plane.png">
 
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS (啟用 class 策略以支援手動切換 dark mode) -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              slate: {
+                850: '#1e293b', // Custom dark slate
+                950: '#020617',
+              }
+            }
+          }
+        }
+      }
+    </script>
     
     <!-- Leaflet Map -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
@@ -44,9 +58,15 @@
             overflow-x: hidden;
             color: #1e293b;
             overscroll-behavior-y: none;
-            /* 確保在 iOS 全螢幕模式下，內容不會被狀態列遮擋 */
             padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Dark Mode Body Override */
+        html.dark body {
+            background-color: #0f172a; /* slate-900 */
+            color: #f1f5f9; /* slate-100 */
         }
         
         .app-bg {
@@ -59,6 +79,12 @@
             pointer-events: none;
             filter: blur(10px);
             transform: scale(1.1);
+            transition: filter 0.5s ease;
+        }
+
+        /* Dark mode background dimmer */
+        html.dark .app-bg {
+            filter: blur(10px) brightness(0.4) grayscale(0.3);
         }
 
         .app-blur-layer {
@@ -68,6 +94,11 @@
             backdrop-filter: blur(4px); 
             z-index: -1;
             pointer-events: none;
+            transition: background-color 0.5s ease;
+        }
+
+        html.dark .app-blur-layer {
+            background-color: rgba(15, 23, 42, 0.4);
         }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -79,6 +110,11 @@
             position: relative;
             overflow: hidden;
         }
+        html.dark .flight-card {
+            background: linear-gradient(135deg, #1e3a8a 0%, #172554 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
         .flight-card::after {
             content: '';
             position: absolute;
@@ -90,6 +126,7 @@
             border-top: 2px dashed rgba(255,255,255,0.4);
         }
 
+        /* Light Mode Glass */
         .liquid-glass {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.55) 100%);
             backdrop-filter: blur(24px) saturate(200%);
@@ -100,6 +137,17 @@
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 10px 20px rgba(255, 255, 255, 0.3);
             position: relative;
             overflow: hidden;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* Dark Mode Glass - Deep & Premium */
+        html.dark .liquid-glass {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.8) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            border-left: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            color: #f8fafc;
         }
 
         .liquid-glass::before {
@@ -111,6 +159,10 @@
             pointer-events: none;
             opacity: 0.3; 
             transition: left 0.5s;
+        }
+        
+        html.dark .liquid-glass::before {
+             background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 100%);
         }
 
         .liquid-glass:hover::before {
@@ -137,8 +189,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 蓋章動畫：從放大淡入到正常大小 */
-        /* 移除 translate(-50%, -50%) 因為父容器已經做了絕對定位置中 */
+        /* 蓋章動畫 */
         .animate-stamp {
             animation: stamp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
@@ -155,15 +206,12 @@
             -webkit-touch-callout: none;
         }
 
-        /* --- 核心修正：手機拖拽縮圖黑色區塊與壓縮問題 --- */
         .dnd-poly-drag-image {
             opacity: 1 !important;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3) !important;
             border-radius: 28px !important;
-            /* 1. 強制寬度，防止卡片縮小變形 */
             width: 320px !important;
             height: auto !important;
-            /* 2. 徹底移除濾鏡與毛玻璃，改用實體背景色消除黑色塊 */
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
             background-color: #ffffff !important;
@@ -173,7 +221,12 @@
             overflow: hidden !important;
         }
         
-        /* 3. 遞歸禁用縮圖內所有子元素的濾鏡與透明渲染 */
+        /* Dark mode drag image styling */
+        html.dark .dnd-poly-drag-image {
+            background-color: #1e293b !important; /* slate-800 */
+            border: 2px solid rgba(255,255,255,0.1) !important;
+        }
+
         .dnd-poly-drag-image *,
         .dnd-poly-drag-image *::before,
         .dnd-poly-drag-image *::after {
@@ -185,7 +238,6 @@
             transition: none !important;
         }
 
-        /* 4. 針對一般卡片的縮圖樣式 */
         .dnd-poly-drag-image .liquid-glass {
             background: #ffffff !important;
             border: 1px solid #e2e8f0 !important;
@@ -193,21 +245,32 @@
             box-shadow: none !important;
         }
         
-        /* 5. 針對航班卡片的縮圖樣式 */
+        html.dark .dnd-poly-drag-image .liquid-glass {
+            background: #1e293b !important;
+            border: 1px solid #334155 !important;
+            color: #f8fafc !important;
+        }
+        
         .dnd-poly-drag-image .flight-card {
-            background: #3b82f6 !important; /* 使用實體藍色取代漸層 */
+            background: #3b82f6 !important;
             color: #ffffff !important;
             border-radius: 24px !important;
         }
         
-        /* 確保文字在實體背景下清晰可見 */
+        html.dark .dnd-poly-drag-image .flight-card {
+            background: #1e3a8a !important;
+        }
+        
         .dnd-poly-drag-image .text-slate-800,
         .dnd-poly-drag-image .text-slate-700 {
             color: #1e293b !important;
         }
-        /* -------------------------------------- */
+        
+        html.dark .dnd-poly-drag-image .text-slate-800,
+        html.dark .dnd-poly-drag-image .text-slate-700 {
+            color: #f8fafc !important;
+        }
 
-        /* 絲滑擠壓動畫樣式 */
         .dnd-item-container {
             transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.2s ease;
             will-change: transform;
@@ -242,7 +305,7 @@
   }
 }
 </script>
-  <script type="module" crossorigin src="./assets/index-s_fapumn.js"></script>
+  <script type="module" crossorigin src="./assets/index-D24uTOP5.js"></script>
 </head>
 <body>
     <div id="root"></div>
