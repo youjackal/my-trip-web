@@ -137,6 +137,16 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* 蓋章動畫：從放大淡入到正常大小 */
+        /* 移除 translate(-50%, -50%) 因為父容器已經做了絕對定位置中 */
+        .animate-stamp {
+            animation: stamp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        @keyframes stamp {
+            0% { opacity: 0; transform: scale(2) rotate(-15deg); }
+            100% { opacity: 1; transform: scale(1.1) rotate(-15deg); }
+        }
+
         /* 手機端拖放優化 */
         [draggable="true"] {
             -webkit-user-drag: element;
@@ -232,7 +242,7 @@
   }
 }
 </script>
-  <script type="module" crossorigin src="./assets/index-Dsx0snj5.js"></script>
+  <script type="module" crossorigin src="./assets/index-D-cU1jGa.js"></script>
 </head>
 <body>
     <div id="root"></div>
